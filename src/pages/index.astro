@@ -22,7 +22,7 @@ import "../styles/t-rex.css";
     throw new Error("2D context not available");
   }
   let stars: { x: number; y: number; size: number; speed: number }[] = [];
-  const numStars = window.innerWidth < 768 ? 100 : 200;
+  const numStars = window.innerWidth < 768 ? 100 : 150;
   const maxStarSize = 2;
 
   function resizeCanvas() {
@@ -32,7 +32,16 @@ import "../styles/t-rex.css";
     }
   }
 
-  window.addEventListener("resize", resizeCanvas);
+  // Debounced resize
+  let resizeTimeout: number;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      resizeCanvas();
+      createStars();
+    }, 150);
+  });
+
   resizeCanvas();
 
   function createStars() {
